@@ -12,6 +12,7 @@ public:
 	int right_child(int key) {return 2 * key + 2;}
 	void insert_key(int key);
 	int extract_key();
+	int get_min() {return arr[0];}
 	void decrease_key(int key, int val);
 	void delete_key(int key);
 	void swap(int *x, int *y) {(*x ^= *y), (*y ^= *x), (*x ^= *y);}
@@ -65,6 +66,23 @@ MinHeap::extract_key() {
 
 
 void
+MinHeap::decrease_key(int key, int val) {
+	arr[key] = val;
+	while (key != 0 && arr[parent(key)] > arr[key]) {
+		swap(&arr[parent(key)], &arr[key]);
+		key = parent(key);
+	}
+}
+
+
+void
+MinHeap::delete_key(int key) {
+	decrease_key(key, INT_MIN);
+	extract_key();
+}
+
+
+void
 MinHeap::print(){
 	for (int i = 0; i < heap_size; i++)
 		std::cout<<arr[i]<<" ";
@@ -80,5 +98,8 @@ int main(int argc, char const *argv[])
 	h.print();
 	std::cout<<"Min Val : = "<<h.extract_key()<<std::endl;
 	h.print();
+	h.delete_key(2);
+	h.print();
+	std::cout<<h.get_min()<<std::endl;
 	return 0;
 }
